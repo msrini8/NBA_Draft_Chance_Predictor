@@ -1,0 +1,400 @@
+// ~->[DNET-1]->~
+
+// File created by GmytrasiewiczP_2 at UIC using Netica 5.22x on Oct 26, 2018 at 04:23:23 UTC.
+
+bnet NBA_Draft_Chance_Predictor {
+AutoCompile = TRUE;
+autoupdate = TRUE;
+whenchanged = 1540521928;
+
+visual V1 {
+	defdispform = BELIEFBARS;
+	nodelabeling = TITLE;
+	NodeMaxNumEntries = 50;
+	nodefont = font {shape= "Arial"; size= 9;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	windowposn = (288, 163, 1202, 507);
+	resolution = 72;
+	drawingbounds = (1420, 835);
+	showpagebreaks = FALSE;
+	usegrid = TRUE;
+	gridspace = (6, 6);
+	NodeSet Node {BuiltIn = 1; Color = 0x00e1e1e1;};
+	NodeSet Nature {BuiltIn = 1; Color = 0x00f8eed2;};
+	NodeSet Deterministic {BuiltIn = 1; Color = 0x00d3caa6;};
+	NodeSet Finding {BuiltIn = 1; Color = 0x00c8c8c8;};
+	NodeSet Constant {BuiltIn = 1; Color = 0x00ffffff;};
+	NodeSet ConstantValue {BuiltIn = 1; Color = 0x00ffffb4;};
+	NodeSet Utility {BuiltIn = 1; Color = 0x00ffbdbd;};
+	NodeSet Decision {BuiltIn = 1; Color = 0x00dee8ff;};
+	NodeSet Documentation {BuiltIn = 1; Color = 0x00f0fafa;};
+	NodeSet Title {BuiltIn = 1; Color = 0x00ffffff;};
+	PrinterSetting A {
+		margins = (1270, 1270, 1270, 1270);
+		};
+	};
+
+node Age {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (less30, less40, less50);
+	parents = ();
+	whenchanged = 1540521872;
+	belief = (0.3333333, 0.3333333, 0.3333333);
+	visual V1 {
+		center = (324, 72);
+		height = 1;
+		};
+	};
+
+node Height {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (around6ft, around7ft);
+	parents = ();
+	whenchanged = 1540521878;
+	belief = (0.5, 0.5);
+	visual V1 {
+		center = (204, 162);
+		height = 2;
+		};
+	};
+
+node Weight {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (above150lbs, above250lbs);
+	parents = ();
+	whenchanged = 1540521898;
+	belief = (0.5, 0.5);
+	visual V1 {
+		center = (330, 246);
+		height = 3;
+		};
+	};
+
+node Fitness {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (belowAverage, aboveAverage);
+	parents = (Age, Height, Weight);
+	probs = 
+		// belowAverage aboveAverage  // Age    Height    Weight      
+		  (0.65,        0.35,         // less30 around6ft above150lbs 
+		   0.75,        0.25,         // less30 around6ft above250lbs 
+		   0.6,         0.4,          // less30 around7ft above150lbs 
+		   0.58,        0.42,         // less30 around7ft above250lbs 
+		   0.67,        0.33,         // less40 around6ft above150lbs 
+		   0.55,        0.45,         // less40 around6ft above250lbs 
+		   0.37,        0.63,         // less40 around7ft above150lbs 
+		   0.3,         0.7,          // less40 around7ft above250lbs 
+		   0.44,        0.56,         // less50 around6ft above150lbs 
+		   0.59,        0.41,         // less50 around6ft above250lbs 
+		   0.51,        0.49,         // less50 around7ft above150lbs 
+		   0.6,         0.4);         // less50 around7ft above250lbs ;
+	numcases = 1;
+	whenchanged = 1540521885;
+	belief = (0.5508333, 0.4491667);
+	visual V1 {
+		center = (588, 186);
+		height = 7;
+		link 1 {
+			path = ((400, 106), (527, 160));
+			};
+		link 3 {
+			path = ((425, 225), (491, 209));
+			};
+		};
+	};
+
+node RecentInjuries {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (None, Mild, Serious);
+	parents = ();
+	whenchanged = 1540521896;
+	belief = (0.3333333, 0.3333333, 0.3333333);
+	visual V1 {
+		center = (132, 354);
+		height = 4;
+		};
+	};
+
+node InjuryProne {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (Yes, No);
+	parents = ();
+	whenchanged = 1540521902;
+	belief = (0.5, 0.5);
+	visual V1 {
+		center = (126, 480);
+		height = 5;
+		};
+	};
+
+node Health {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (belowAverage, aboveAverage);
+	parents = (RecentInjuries, InjuryProne);
+	probs = 
+		// belowAverage aboveAverage  // RecentInjuries InjuryProne 
+		  (0.45,        0.55,         // None           Yes         
+		   0.1,         0.9,          // None           No          
+		   0.58,        0.42,         // Mild           Yes         
+		   0.25,        0.75,         // Mild           No          
+		   0.92,        0.08,         // Serious        Yes         
+		   0.73,        0.27);        // Serious        No          ;
+	numcases = 1;
+	whenchanged = 1540514150;
+	belief = (0.505, 0.495);
+	visual V1 {
+		center = (408, 426);
+		height = 6;
+		link 1 {
+			path = ((213, 374), (311, 400));
+			};
+		};
+	};
+
+node ChampionshipWon {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (None, less5, less10);
+	parents = ();
+	whenchanged = 1540514912;
+	belief = (0.3333333, 0.3333333, 0.3333333);
+	visual V1 {
+		center = (390, 564);
+		height = 16;
+		};
+	};
+
+node MVPAwardsWon {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (None, less2, less6);
+	parents = ();
+	whenchanged = 1540521928;
+	belief = (0.3333333, 0.3333333, 0.3333333);
+	visual V1 {
+		center = (282, 666);
+		height = 17;
+		};
+	};
+
+node SeasonsPlayed {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (None, above5, above10, above15);
+	parents = ();
+	whenchanged = 1540514912;
+	belief = (0.25, 0.25, 0.25, 0.25);
+	visual V1 {
+		center = (384, 768);
+		height = 18;
+		};
+	};
+
+node Performance {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (belowAverage, aboveAverage);
+	parents = (ChampionshipWon, MVPAwardsWon, SeasonsPlayed);
+	probs = 
+		// belowAverage aboveAverage  // ChampionshipWon MVPAwardsWon SeasonsPlayed 
+		  (0.95,        0.05,         // None            None         None          
+		   0.92,        0.08,         // None            None         above5        
+		   0.9,         0.1,          // None            None         above10       
+		   0.87,        0.13,         // None            None         above15       
+		   0.85,        0.15,         // None            less2        None          
+		   0.83,        0.17,         // None            less2        above5        
+		   0.8,         0.2,          // None            less2        above10       
+		   0.78,        0.22,         // None            less2        above15       
+		   0.75,        0.25,         // None            less6        None          
+		   0.72,        0.28,         // None            less6        above5        
+		   0.7,         0.3,          // None            less6        above10       
+		   0.67,        0.33,         // None            less6        above15       
+		   0.83,        0.17,         // less5           None         None          
+		   0.8,         0.2,          // less5           None         above5        
+		   0.78,        0.22,         // less5           None         above10       
+		   0.75,        0.25,         // less5           None         above15       
+		   0.72,        0.28,         // less5           less2        None          
+		   0.7,         0.3,          // less5           less2        above5        
+		   0.67,        0.33,         // less5           less2        above10       
+		   0.65,        0.35,         // less5           less2        above15       
+		   0.63,        0.37,         // less5           less6        None          
+		   0.6,         0.4,          // less5           less6        above5        
+		   0.58,        0.42,         // less5           less6        above10       
+		   0.55,        0.45,         // less5           less6        above15       
+		   0.7,         0.3,          // less10          None         None          
+		   0.67,        0.33,         // less10          None         above5        
+		   0.65,        0.35,         // less10          None         above10       
+		   0.63,        0.37,         // less10          None         above15       
+		   0.6,         0.4,          // less10          less2        None          
+		   0.58,        0.42,         // less10          less2        above5        
+		   0.55,        0.45,         // less10          less2        above10       
+		   0.52,        0.48,         // less10          less2        above15       
+		   0.5,         0.5,          // less10          less6        None          
+		   0.47,        0.53,         // less10          less6        above5        
+		   0.45,        0.55,         // less10          less6        above10       
+		   0.43,        0.57);        // less10          less6        above15       ;
+	whenchanged = 1540514708;
+	belief = (0.6875, 0.3125);
+	visual V1 {
+		center = (618, 654);
+		height = 15;
+		};
+	};
+
+node PointGuard {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (Yes, No);
+	parents = ();
+	whenchanged = 1540521913;
+	belief = (0.5, 0.5);
+	visual V1 {
+		center = (966, 156);
+		height = 11;
+		};
+	};
+
+node ShootingGuard {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (Yes, No);
+	parents = ();
+	whenchanged = 1540521916;
+	belief = (0.5, 0.5);
+	visual V1 {
+		center = (1176, 222);
+		height = 12;
+		};
+	};
+
+node SmallForward {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (Yes, No);
+	parents = ();
+	whenchanged = 1540521918;
+	belief = (0.5, 0.5);
+	visual V1 {
+		center = (1230, 342);
+		height = 13;
+		};
+	};
+
+node PowerForward {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (Yes, No);
+	parents = ();
+	whenchanged = 1540521920;
+	belief = (0.5, 0.5);
+	visual V1 {
+		center = (1182, 450);
+		height = 14;
+		};
+	};
+
+node Center {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (Yes, No);
+	parents = ();
+	whenchanged = 1540521924;
+	belief = (0.5, 0.5);
+	visual V1 {
+		center = (1050, 540);
+		height = 9;
+		};
+	};
+
+node Positions {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Efficient, NotEfficient);
+	parents = (PointGuard, ShootingGuard, SmallForward, PowerForward, Center);
+	probs = 
+		// Efficient    NotEfficient  // PointGuard ShootingGuard SmallForward PowerForward Center 
+		  (1,           0,            // Yes        Yes           Yes          Yes          Yes    
+		   0.9,         0.1,          // Yes        Yes           Yes          Yes          No     
+		   0.9,         0.1,          // Yes        Yes           Yes          No           Yes    
+		   0.9,         0.1,          // Yes        Yes           Yes          No           No     
+		   0.9,         0.1,          // Yes        Yes           No           Yes          Yes    
+		   0.78,        0.22,         // Yes        Yes           No           Yes          No     
+		   0.78,        0.22,         // Yes        Yes           No           No           Yes    
+		   0.65,        0.35,         // Yes        Yes           No           No           No     
+		   0.9,         0.1,          // Yes        No            Yes          Yes          Yes    
+		   0.83,        0.17,         // Yes        No            Yes          Yes          No     
+		   0.83,        0.17,         // Yes        No            Yes          No           Yes    
+		   0.7,         0.3,          // Yes        No            Yes          No           No     
+		   0.83,        0.17,         // Yes        No            No           Yes          Yes    
+		   0.7,         0.3,          // Yes        No            No           Yes          No     
+		   0.6,         0.4,          // Yes        No            No           No           Yes    
+		   0.5,         0.5,          // Yes        No            No           No           No     
+		   0.8,         0.2,          // No         Yes           Yes          Yes          Yes    
+		   0.7,         0.3,          // No         Yes           Yes          Yes          No     
+		   0.7,         0.3,          // No         Yes           Yes          No           Yes    
+		   0.65,        0.35,         // No         Yes           Yes          No           No     
+		   0.7,         0.3,          // No         Yes           No           Yes          Yes    
+		   0.6,         0.4,          // No         Yes           No           Yes          No     
+		   0.6,         0.4,          // No         Yes           No           No           Yes    
+		   0.55,        0.45,         // No         Yes           No           No           No     
+		   0.6,         0.4,          // No         No            Yes          Yes          Yes    
+		   0.45,        0.55,         // No         No            Yes          Yes          No     
+		   0.35,        0.65,         // No         No            Yes          No           Yes    
+		   0.25,        0.75,         // No         No            Yes          No           No     
+		   0.35,        0.65,         // No         No            No           Yes          Yes    
+		   0.25,        0.75,         // No         No            No           Yes          No     
+		   0.25,        0.75,         // No         No            No           No           Yes    
+		   0,           1);           // No         No            No           No           No     ;
+	whenchanged = 1540515700;
+	belief = (0.640625, 0.359375);
+	visual V1 {
+		center = (948, 330);
+		height = 10;
+		};
+	};
+
+node Stats {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (GettingDrafted, NotGettingDrafted);
+	statetitles = ("GettingDrafted", );
+	parents = (Fitness, Health, Performance, Positions);
+	probs = 
+		// GettingDrafted NotGettingDrafte  // Fitness      Health       Performance  Positions    
+		  (0.3,         0.7,          // belowAverage belowAverage belowAverage Efficient    
+		   0.1,         0.9,          // belowAverage belowAverage belowAverage NotEfficient 
+		   0.4,         0.6,          // belowAverage belowAverage aboveAverage Efficient    
+		   0.25,        0.75,         // belowAverage belowAverage aboveAverage NotEfficient 
+		   0.35,        0.65,         // belowAverage aboveAverage belowAverage Efficient    
+		   0.2,         0.8,          // belowAverage aboveAverage belowAverage NotEfficient 
+		   0.7,         0.3,          // belowAverage aboveAverage aboveAverage Efficient    
+		   0.55,        0.45,         // belowAverage aboveAverage aboveAverage NotEfficient 
+		   0.5,         0.5,          // aboveAverage belowAverage belowAverage Efficient    
+		   0.35,        0.65,         // aboveAverage belowAverage belowAverage NotEfficient 
+		   0.8,         0.2,          // aboveAverage belowAverage aboveAverage Efficient    
+		   0.7,         0.3,          // aboveAverage belowAverage aboveAverage NotEfficient 
+		   0.75,        0.25,         // aboveAverage aboveAverage belowAverage Efficient    
+		   0.6,         0.4,          // aboveAverage aboveAverage belowAverage NotEfficient 
+		   0.95,        0.05,         // aboveAverage aboveAverage aboveAverage Efficient    
+		   0.8,         0.2);         // aboveAverage aboveAverage aboveAverage NotEfficient ;
+	whenchanged = 1540516278;
+	belief = (0.4766585, 0.5233415);
+	visual V1 {
+		center = (768, 486);
+		height = 8;
+		};
+	};
+ElimOrder = (RecentInjuries, InjuryProne, Age, Height, Weight, Stats, Fitness, Health, PointGuard, ShootingGuard, SmallForward, PowerForward, Center, Positions, ChampionshipWon, Performance, MVPAwardsWon, SeasonsPlayed);
+};
